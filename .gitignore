@@ -1,0 +1,19 @@
+# Entorno y secretos
+.venv/
+.env
+
+# Datos locales (SQLite, exports intermedios)
+data/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Node / dashboard
+dashboard/node_modules/
+dashboard/dist/
+
+# IDE / SO
+.vscode/
+Thumbs.db
