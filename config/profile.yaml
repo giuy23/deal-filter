@@ -1,0 +1,40 @@
+# ============================================================
+# EL CORAZÓN DEL SISTEMA — pesos del perfil de Luis (SDD §4)
+# Todo editable sin tocar código. Los pesos blandos DEBEN sumar 100.
+# ============================================================
+
+# ====== FILTROS DUROS (si falla uno, la oferta se descarta sin puntuar) ======
+hard_filters:
+  exclude_title_keywords: [".NET lead", "iOS", "Android nativo"]
+  max_seniority: senior          # descarta lead/principal (unknown pasa)
+  min_salary_usd_month: null     # null = no filtrar por sueldo aún
+  exclude_english: [advanced]    # descarta si EXIGE inglés avanzado
+
+# ====== PESOS BLANDOS (score = suma ponderada, 0-100) ======
+weights:
+  stack_match:    { weight: 35 }   # % de coincidencia con my_stack
+  remote:         { weight: 20, values: { remote: 1.0, hybrid: 0.4, onsite: 0.0, unknown: 0.3 } }
+  salary:         { weight: 15 }   # curva lineal entre floor y ceiling
+  seniority_fit:  { weight: 10, values: { junior: 0.6, mid: 1.0, senior: 0.7, lead: 0.0, unknown: 0.5 } }
+  latam_friendly: { weight: 10 }   # menciona LATAM / GMT-5 / español = 1
+  english_fit:    { weight: 5,  values: { none: 1.0, basic: 1.0, conversational: 0.5, advanced: 0.0, unknown: 0.7 } }
+  freshness:      { weight: 5 }    # decay lineal 30 días
+
+my_stack:
+  core:      [php, codeigniter, javascript, mysql]        # x1.0
+  secondary: [laravel, vue, sql, postgresql, git, nginx]  # x0.6
+  learning:  [python, react, astro, nestjs]               # x0.3
+
+salary_curve: { floor_usd_month: 600, ceiling_usd_month: 3000 }
+
+# Tabla de conversión a USD (SDD §3.1). Actualizar de vez en cuando.
+currency_rates:
+  USD: 1.0
+  PEN: 0.27
+  EUR: 1.09
+  GBP: 1.27
+  CLP: 0.0011
+  COP: 0.00025
+  MXN: 0.055
+  ARS: 0.0008
+  BRL: 0.18

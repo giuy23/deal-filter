@@ -1,0 +1,35 @@
+# Fuentes on/off y su configuración. Las API keys van SOLO en variables
+# de entorno (.env), nunca aquí. SDD §5.
+
+sources:
+  remoteok:
+    enabled: true
+    # Se queda solo con ofertas que mencionen alguno de estos tags (vacío = todas)
+    keywords: [php, laravel, javascript, vue, python, mysql, backend, full stack, fullstack]
+
+  getonboard:
+    enabled: true
+    categories: [programming]
+
+  adzuna:
+    enabled: true              # requiere ADZUNA_APP_ID y ADZUNA_APP_KEY en .env
+    countries: [gb, us, mx, br]
+    query: php developer
+    results_per_country: 50
+
+  hn_hiring:
+    enabled: true
+    # Filtra comentarios del hilo "Who is hiring?" que mencionen algo de esto
+    keywords: [php, laravel, vue, javascript, python, remote]
+
+  computrabajo:
+    enabled: true
+    base_url: https://pe.computrabajo.com
+    query: desarrollador-web
+    max_pages: 2
+    throttle_seconds: 2        # 1 req / 2 s — respeto explícito del SDD
+
+# Umbral del digest (score mínimo para entrar al email)
+digest:
+  min_score: 60
+  top_n: 10
