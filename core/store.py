@@ -77,8 +77,8 @@ class Store:
                     INSERT OR REPLACE INTO offers
                     (id, source, title, company, url, location, remote, salary_min, salary_max,
                      stack, seniority, english_required, description, posted_at, fetched_at,
-                     date_estimated, score, score_breakdown)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                     date_estimated, score, score_breakdown, stale)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)
                     """,
                     (
                         offer.id,
@@ -128,17 +128,21 @@ class Store:
     def get_all_offers(self, exclude_stale: bool = False) -> list[Offer]:
         """Lee todas las ofertas de la BD como objetos Offer."""
         where = "WHERE stale = 0" if exclude_stale else ""
-        rows = self.conn.execute(
+        cursor = self.conn.execute(
             f"SELECT * FROM offers {where} ORDER BY fetched_at DESC, score DESC"
-        ).fetchall()
+        )
+        rows = cursor.fetchall()
 
-        cols = [col[0] for col in self.conn.description]
+        cols = [col[0] for col in cursor.description]
         offers = []
         for row in rows:
             data = dict(zip(cols, row))
             # Reconvertir JSON
             data["stack"] = json.loads(data["stack"])
             data["score_breakdown"] = json.loads(data["score_breakdown"])
+            # Excluir columnas que no son del Offer
+            for key in ("notified", "stale"):
+                data.pop(key, None)
             offers.append(Offer(**data))
         return offers
 
@@ -152,17 +156,21 @@ class Store:
 
     def get_unnotified(self, min_score: float = 60) -> list[Offer]:
         """Ofertas nuevas con score ≥ threshold (para digest)."""
-        rows = self.conn.execute(
+        cursor = self.conn.execute(
             "SELECT * FROM offers WHERE stale = 0 AND notified = 0 AND score >= ?"
             " ORDER BY score DESC LIMIT 100",
             (min_score,),
-        ).fetchall()
-        cols = [col[0] for col in self.conn.description]
+        )
+        rows = cursor.fetchall()
+        cols = [col[0] for col in cursor.description]
         offers = []
         for row in rows:
             data = dict(zip(cols, row))
             data["stack"] = json.loads(data["stack"])
             data["score_breakdown"] = json.loads(data["score_breakdown"])
+            # Excluir columnas que no son del Offer
+            for key in ("notified", "stale"):
+                data.pop(key, None)
             offers.append(Offer(**data))
         return offers
 

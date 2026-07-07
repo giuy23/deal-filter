@@ -8,22 +8,22 @@ sources:
     keywords: [php, laravel, javascript, vue, python, mysql, backend, full stack, fullstack]
 
   getonboard:
-    enabled: true
+    enabled: false             # Desactivo para MVP si no hay conectividad
     categories: [programming]
 
   adzuna:
-    enabled: true              # requiere ADZUNA_APP_ID y ADZUNA_APP_KEY en .env
+    enabled: false             # Requiere ADZUNA_APP_ID y ADZUNA_APP_KEY en .env
     countries: [gb, us, mx, br]
     query: php developer
     results_per_country: 50
 
   hn_hiring:
-    enabled: true
+    enabled: false             # Desactivo para MVP si falla
     # Filtra comentarios del hilo "Who is hiring?" que mencionen algo de esto
     keywords: [php, laravel, vue, javascript, python, remote]
 
   computrabajo:
-    enabled: true
+    enabled: false             # Desactivo para MVP si no funciona
     base_url: https://pe.computrabajo.com
     query: desarrollador-web
     max_pages: 2
