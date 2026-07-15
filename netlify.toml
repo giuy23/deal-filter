@@ -1,0 +1,7 @@
+# Configuración de deploy para Netlify.
+# El dashboard vive en dashboard/ y se buildea con Vite → dashboard/dist.
+
+[build]
+  base = "dashboard"           # carpeta donde corre el build
+  command = "npm run build"    # Vite build
+  publish = "dist"             # relativo a base → dashboard/dist (incluye data/offers.json)
